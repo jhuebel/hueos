@@ -46,6 +46,14 @@ void vga_write_regs(const uint8_t *regs, size_t count, uint16_t port_index, uint
     }
 }
 
+// Reverse bits in a byte (for VGA font bit order)
+static inline uint8_t reverse_bits(uint8_t b) {
+    b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+    b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+    b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+    return b;
+}
+
 // Load 8x8 VGA font from embedded data
 void load_8x8_font(void) {
     serial_write("VESA: Loading 8x8 font\n");
@@ -82,9 +90,10 @@ void load_8x8_font(void) {
     uint8_t* vga_font = (uint8_t*)0xA0000;
     
     // Copy first 128 characters from embedded font
+    // VGA expects MSB as leftmost pixel, so reverse bits
     for (int ch = 0; ch < 128; ch++) {
         for (int row = 0; row < 8; row++) {
-            vga_font[ch * 32 + row] = font_8x8[ch][row];
+            vga_font[ch * 32 + row] = reverse_bits(font_8x8[ch][row]);
         }
     }
     
@@ -92,7 +101,7 @@ void load_8x8_font(void) {
     for (int ch = 128; ch < 256; ch++) {
         for (int row = 0; row < 8; row++) {
             // Use character 0 (blank) for extended ASCII
-            vga_font[ch * 32 + row] = font_8x8[0][row];
+            vga_font[ch * 32 + row] = reverse_bits(font_8x8[0][row]);
         }
     }
     
