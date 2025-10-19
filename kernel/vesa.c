@@ -370,6 +370,66 @@ void init_vesa(const char* cmdline) {
     detect_screen_size();
 }
 
+// Initialize VESA with multiboot video info
+void init_vesa_with_mbi(const char* cmdline, struct multiboot_info* mbi) {
+    serial_write("VESA: Initializing video mode support\n");
+    
+    // Check if multiboot provided framebuffer info (flag bit 12)
+    if (mbi && (mbi->flags & (1 << 12))) {
+        serial_write("VESA: Multiboot framebuffer info available\n");
+        
+        // For text mode, framebuffer_type should be 2
+        if (mbi->framebuffer_type == 2) {
+            serial_write("VESA: Text mode detected from multiboot\n");
+            size_t width = mbi->framebuffer_width;
+            size_t height = mbi->framebuffer_height;
+            
+            // Validate dimensions
+            if (width >= 40 && width <= 200 && height >= 20 && height <= 100) {
+                terminal_set_dimensions(width, height);
+                
+                // If we're in 80x50, we need to load the 8x8 font
+                if (width == 80 && height == 50) {
+                    load_8x8_font();
+                }
+                
+                serial_write("VESA: Set dimensions from multiboot: ");
+                char buf[32];
+                int i = 0;
+                size_t temp = width;
+                do {
+                    buf[i++] = '0' + (temp % 10);
+                    temp /= 10;
+                } while (temp > 0);
+                for (int j = 0; j < i/2; j++) {
+                    char t = buf[j];
+                    buf[j] = buf[i-1-j];
+                    buf[i-1-j] = t;
+                }
+                buf[i++] = 'x';
+                int start = i;
+                temp = height;
+                do {
+                    buf[i++] = '0' + (temp % 10);
+                    temp /= 10;
+                } while (temp > 0);
+                for (int j = start; j < (start + (i - start)/2); j++) {
+                    char t = buf[j];
+                    buf[j] = buf[i-1-(j-start)];
+                    buf[i-1-(j-start)] = t;
+                }
+                buf[i++] = '\n';
+                buf[i] = '\0';
+                serial_write(buf);
+                return;
+            }
+        }
+    }
+    
+    // Fall back to command line or detection
+    init_vesa(cmdline);
+}
+
 void print_available_modes(void) {
     terminal_writestring("Available text modes:\n");
     serial_write("Available text modes:\n");
