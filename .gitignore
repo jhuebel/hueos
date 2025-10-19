@@ -1,0 +1,30 @@
+# Build artifacts
+build/
+*.bin
+*.o
+*.iso
+
+# Test files
+test_disk.img
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+
+# ISO directory
+isodir/
+
+# Debug files
+*.gdb_history
