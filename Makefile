@@ -86,6 +86,9 @@ iso: $(KERNEL)
 	echo '# Wide text mode (132x25) - VESA Mode 0x109' >> $(ISODIR)/boot/grub/grub.cfg
 	echo 'menuentry "HueOS (132x25 Wide Screen)" {' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    insmod vbe' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod video_bochs' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod video_cirrus' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    set gfxmode=1056x400x16' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    set gfxpayload=1056x400x16' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    multiboot /boot/hueos.bin res=132x25' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
@@ -94,6 +97,9 @@ iso: $(KERNEL)
 	echo '# Wide high resolution (132x43) - VESA Mode 0x10A' >> $(ISODIR)/boot/grub/grub.cfg
 	echo 'menuentry "HueOS (132x43 Wide High Res)" {' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    insmod vbe' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod video_bochs' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod video_cirrus' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    set gfxmode=1056x688x16' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    set gfxpayload=1056x688x16' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    multiboot /boot/hueos.bin res=132x43' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
@@ -102,6 +108,9 @@ iso: $(KERNEL)
 	echo '# Extra wide high resolution (132x50) - VESA Mode 0x10B' >> $(ISODIR)/boot/grub/grub.cfg
 	echo 'menuentry "HueOS (132x50 Extra Lines)" {' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    insmod vbe' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod video_bochs' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod video_cirrus' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    set gfxmode=1056x800x16' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    set gfxpayload=1056x800x16' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    multiboot /boot/hueos.bin res=132x50' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
