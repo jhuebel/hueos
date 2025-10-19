@@ -42,9 +42,9 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     // Check for resolution mode early (before printing)
     if (mbi->flags & 0x04) {
         char* cmdline = (char*)mbi->cmdline;
-        init_vesa(cmdline);
+        init_vesa_with_mbi(cmdline, mbi);
     } else {
-        init_vesa(NULL);
+        init_vesa_with_mbi(NULL, mbi);
     }
     
     terminal_writestring("HueOS Kernel Starting...\n");
