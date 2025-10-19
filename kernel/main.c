@@ -35,6 +35,9 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     init_serial();
     serial_write("Serial port initialized\n");
     
+    // Initialize framebuffer if available
+    framebuffer_init(mbi);
+    
     // Initialize terminal for VGA output
     terminal_initialize();
     serial_write("Terminal initialized\n");
