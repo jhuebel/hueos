@@ -392,9 +392,60 @@ void init_vesa(const char* cmdline) {
 void init_vesa_with_mbi(const char* cmdline, struct multiboot_info* mbi) {
     serial_write("VESA: Initializing video mode support\n");
     
+    // Debug: Print multiboot flags
+    char flags_buf[20];
+    uint32_t flags = mbi ? mbi->flags : 0;
+    serial_write("VESA: Multiboot flags = 0x");
+    for (int i = 7; i >= 0; i--) {
+        uint8_t nibble = (flags >> (i * 4)) & 0xF;
+        flags_buf[7-i] = nibble < 10 ? '0' + nibble : 'a' + nibble - 10;
+    }
+    flags_buf[8] = '\n';
+    flags_buf[9] = '\0';
+    serial_write(flags_buf);
+    
     // Check if multiboot provided framebuffer info (flag bit 12)
     if (mbi && (mbi->flags & (1 << 12))) {
         serial_write("VESA: Multiboot framebuffer info available\n");
+        
+        // Debug: Print framebuffer details
+        serial_write("VESA: Framebuffer type = ");
+        flags_buf[0] = '0' + mbi->framebuffer_type;
+        flags_buf[1] = '\n';
+        flags_buf[2] = '\0';
+        serial_write(flags_buf);
+        
+        serial_write("VESA: Framebuffer width (pixels) = ");
+        uint32_t val = mbi->framebuffer_width;
+        int idx = 0;
+        do {
+            flags_buf[idx++] = '0' + (val % 10);
+            val /= 10;
+        } while (val > 0);
+        for (int j = 0; j < idx/2; j++) {
+            char t = flags_buf[j];
+            flags_buf[j] = flags_buf[idx-1-j];
+            flags_buf[idx-1-j] = t;
+        }
+        flags_buf[idx++] = '\n';
+        flags_buf[idx] = '\0';
+        serial_write(flags_buf);
+        
+        serial_write("VESA: Framebuffer height (pixels) = ");
+        val = mbi->framebuffer_height;
+        idx = 0;
+        do {
+            flags_buf[idx++] = '0' + (val % 10);
+            val /= 10;
+        } while (val > 0);
+        for (int j = 0; j < idx/2; j++) {
+            char t = flags_buf[j];
+            flags_buf[j] = flags_buf[idx-1-j];
+            flags_buf[idx-1-j] = t;
+        }
+        flags_buf[idx++] = '\n';
+        flags_buf[idx] = '\0';
+        serial_write(flags_buf);
         
         // For text mode, framebuffer_type should be 2
         // For graphics mode used as text, framebuffer_type is 1
