@@ -6,13 +6,24 @@ align 4
 
 ; Multiboot constants
 MULTIBOOT_MAGIC     equ 0x1BADB002
-MULTIBOOT_FLAGS     equ 0x00000003  ; Page align + memory info
+MULTIBOOT_FLAGS     equ 0x00000007  ; Page align + memory info + video mode
 MULTIBOOT_CHECKSUM  equ -(MULTIBOOT_MAGIC + MULTIBOOT_FLAGS)
 
 ; Multiboot header
 dd MULTIBOOT_MAGIC
 dd MULTIBOOT_FLAGS
 dd MULTIBOOT_CHECKSUM
+
+; Video mode fields (required when flag bit 2 is set)
+dd 0                    ; header_addr (0 = no preference)
+dd 0                    ; load_addr
+dd 0                    ; load_end_addr
+dd 0                    ; bss_end_addr
+dd 0                    ; entry_addr
+dd 1                    ; mode_type (1 = text mode, 0 = graphics)
+dd 0                    ; width (0 = no preference)
+dd 0                    ; height (0 = no preference)
+dd 0                    ; depth (0 = no preference)
 
 section .text
 global _start
