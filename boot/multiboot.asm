@@ -14,12 +14,14 @@ dd MULTIBOOT_MAGIC
 dd MULTIBOOT_FLAGS
 dd MULTIBOOT_CHECKSUM
 
-; Video mode fields (required when flag bit 2 is set)
-dd 0                    ; header_addr (0 = no preference)
+; Address fields (required for aout kludge, must be 0 for ELF)
+dd 0                    ; header_addr (0 = using ELF, not aout kludge)
 dd 0                    ; load_addr
 dd 0                    ; load_end_addr
 dd 0                    ; bss_end_addr
 dd 0                    ; entry_addr
+
+; Video mode fields (used when flag bit 2 is set)
 dd 1                    ; mode_type (1 = text mode, 0 = graphics)
 dd 0                    ; width (0 = no preference)
 dd 0                    ; height (0 = no preference)

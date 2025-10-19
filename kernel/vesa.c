@@ -404,7 +404,14 @@ void init_vesa_with_mbi(const char* cmdline, struct multiboot_info* mbi) {
     flags_buf[9] = '\0';
     serial_write(flags_buf);
     
-    // Check if multiboot provided framebuffer info (flag bit 12)
+    // FIRST: Check if user requested a specific resolution via command line
+    // This takes precedence over multiboot video info
+    if (parse_resolution(cmdline)) {
+        serial_write("VESA: Resolution set from command line\n");
+        return;  // Command line resolution set successfully
+    }
+    
+    // SECOND: Check if multiboot provided framebuffer info (flag bit 12)
     if (mbi && (mbi->flags & (1 << 12))) {
         serial_write("VESA: Multiboot framebuffer info available\n");
         
@@ -454,6 +461,20 @@ void init_vesa_with_mbi(const char* cmdline, struct multiboot_info* mbi) {
                 serial_write("VESA: Text mode detected from multiboot\n");
             } else {
                 serial_write("VESA: Graphics mode detected from multiboot\n");
+                
+                // Detect special resolutions that signal specific text modes
+                uint32_t width_px = mbi->framebuffer_width;
+                uint32_t height_px = mbi->framebuffer_height;
+                
+                // 640x400 → User wants 80x50 VGA text mode
+                if (width_px == 640 && height_px == 400) {
+                    serial_write("VESA: Detected 640x400 - switching to VGA 80x50 text mode\n");
+                    set_80x50_mode();
+                    return;  // VGA mode is now set
+                }
+                
+                // Other graphics modes will be handled by framebuffer renderer below
+                serial_write("VESA: Graphics framebuffer will be used for text rendering\n");
             }
             
             size_t width = mbi->framebuffer_width;

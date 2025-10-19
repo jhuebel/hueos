@@ -76,53 +76,31 @@ iso: $(KERNEL)
 	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '}' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '# High resolution text mode (80x50)' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '# High resolution text mode (80x50) - Requires real hardware' >> $(ISODIR)/boot/grub/grub.cfg
 	echo 'menuentry "HueOS (80x50 High Resolution)" {' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    set gfxpayload=text' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    multiboot /boot/hueos.bin res=80x50' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '}' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '# Wide text mode (132x25) - Graphics Framebuffer' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '# Wide text mode (132x25) - Graphics Framebuffer - Requires real hardware' >> $(ISODIR)/boot/grub/grub.cfg
 	echo 'menuentry "HueOS (132x25 Wide Screen)" {' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod vbe' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod video_bochs' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod video_cirrus' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod vga' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    set gfxmode=1056x400x16' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    set gfxpayload=keep' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod all_video' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod gfxterm' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    terminal_output gfxterm' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    set gfxmode=1056x400' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    multiboot /boot/hueos.bin res=132x25' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '}' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '# Wide high resolution (132x43) - Graphics Framebuffer' >> $(ISODIR)/boot/grub/grub.cfg
-	echo 'menuentry "HueOS (132x43 Wide High Res)" {' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod vbe' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod video_bochs' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod video_cirrus' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod vga' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    set gfxmode=1056x688x16' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    set gfxpayload=keep' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    multiboot /boot/hueos.bin res=132x43' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '}' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '# Extra wide high resolution (132x50) - Graphics Framebuffer' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '# Wide high resolution (132x50) - Graphics Framebuffer - Requires real hardware' >> $(ISODIR)/boot/grub/grub.cfg
 	echo 'menuentry "HueOS (132x50 Extra Lines)" {' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod vbe' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod video_bochs' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod video_cirrus' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    insmod vga' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    set gfxmode=1056x800x16' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    set gfxpayload=keep' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod all_video' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    insmod gfxterm' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    terminal_output gfxterm' >> $(ISODIR)/boot/grub/grub.cfg
+	echo '    set gfxmode=1056x800' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    multiboot /boot/hueos.bin res=132x50' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '}' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '# Verbose with high resolution' >> $(ISODIR)/boot/grub/grub.cfg
-	echo 'menuentry "HueOS (Verbose + 80x50 High Res)" {' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    set gfxpayload=text' >> $(ISODIR)/boot/grub/grub.cfg
-	echo '    multiboot /boot/hueos.bin verbose res=80x50' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '}' >> $(ISODIR)/boot/grub/grub.cfg
 	grub-mkrescue -o hueos.iso $(ISODIR)

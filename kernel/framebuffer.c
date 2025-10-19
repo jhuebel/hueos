@@ -31,14 +31,23 @@ void framebuffer_init(struct multiboot_info* mbi) {
         return;
     }
     
+    fb_type = mbi->framebuffer_type;
+    
+    // Only initialize for graphics modes (type 1 = RGB graphics)
+    // Type 2 = EGA text, which should use normal VGA text mode
+    if (fb_type != 1) {
+        serial_write("Framebuffer: Text mode detected, using VGA driver\n");
+        fb_address = NULL;  // Disable framebuffer
+        return;
+    }
+    
     fb_address = (uint8_t*)(uintptr_t)mbi->framebuffer_addr;
     fb_width = mbi->framebuffer_width;
     fb_height = mbi->framebuffer_height;
     fb_pitch = mbi->framebuffer_pitch;
     fb_bpp = mbi->framebuffer_bpp;
-    fb_type = mbi->framebuffer_type;
     
-    serial_write("Framebuffer: Initialized\n");
+    serial_write("Framebuffer: Graphics mode initialized\n");
     serial_write("Framebuffer: Address = 0x");
     char buf[20];
     for (int i = 7; i >= 0; i--) {
