@@ -198,7 +198,9 @@ The kernel sets up the basic infrastructure for Hyper-V hypercalls but doesn't i
 
 ## License
 
-This project is provided as-is for educational purposes. Feel free to use and modify as needed.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Copyright (c) 2025 Jason Huebel
 
 ## Documentation
 
