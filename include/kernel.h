@@ -13,6 +13,7 @@ typedef signed int     int32_t;
 typedef signed long long int64_t;
 
 typedef unsigned long  size_t;
+typedef unsigned long  uintptr_t;
 #define NULL ((void*)0)
 
 // Multiboot information structure
@@ -67,6 +68,14 @@ void init_hwinfo(void);
 void init_vesa(const char* cmdline);
 void init_vesa_with_mbi(const char* cmdline, struct multiboot_info* mbi);
 void print_available_modes(void);
+void framebuffer_init(struct multiboot_info* mbi);
+int framebuffer_is_active(void);
+void framebuffer_get_dimensions(size_t* width, size_t* height);
+void framebuffer_putchar(char c);
+void framebuffer_writestring(const char* str);
+void framebuffer_set_color(uint8_t color);
+void framebuffer_clear(void);
+uint8_t reverse_bits(uint8_t b);
 void terminal_initialize(void);
 void terminal_putchar(char c);
 void terminal_write(const char* data, size_t size);
