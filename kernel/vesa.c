@@ -47,7 +47,7 @@ void vga_write_regs(const uint8_t *regs, size_t count, uint16_t port_index, uint
 }
 
 // Reverse bits in a byte (for VGA font bit order)
-static inline uint8_t reverse_bits(uint8_t b) {
+uint8_t reverse_bits(uint8_t b) {
     b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
     b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
     b = (b & 0xAA) >> 1 | (b & 0x55) << 1;

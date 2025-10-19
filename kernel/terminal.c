@@ -43,6 +43,14 @@ void terminal_initialize(void) {
     terminal_column = 0;
     terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
     
+    // Check if framebuffer mode is active
+    if (framebuffer_is_active()) {
+        framebuffer_set_color(terminal_color);
+        framebuffer_clear();
+        return;
+    }
+    
+    // Use VGA text mode
     for (size_t y = 0; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
             const size_t index = y * VGA_WIDTH + x;
@@ -75,6 +83,13 @@ void terminal_scroll(void) {
 }
 
 void terminal_putchar(char c) {
+    // Use framebuffer if active
+    if (framebuffer_is_active()) {
+        framebuffer_putchar(c);
+        return;
+    }
+    
+    // Use VGA text mode
     if (c == '\n') {
         terminal_column = 0;
         if (++terminal_row == VGA_HEIGHT) {
