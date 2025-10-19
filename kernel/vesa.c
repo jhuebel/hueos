@@ -122,6 +122,20 @@ void load_8x8_font(void) {
     serial_write("VESA: 8x8 font loaded\n");
 }
 
+// Set 132-column text mode (requires VGA register programming)
+void set_132_column_mode(size_t height) {
+    serial_write("VESA: Attempting to set 132-column mode...\n");
+    serial_write("VESA: Warning - 132-column requires SVGA hardware\n");
+    serial_write("VESA: Using software dimensions only\n");
+    
+    // Note: True 132-column mode requires SVGA capabilities
+    // Standard VGA hardware cannot display 132 columns
+    // This sets the software dimensions but won't change hardware mode
+    // For actual 132-column display, system must boot with VESA BIOS mode set
+    
+    terminal_set_dimensions(132, height);
+}
+
 // Set 80x50 text mode (400-line mode with 8-pixel font)
 void set_80x50_mode(void) {
     serial_write("VESA: Switching to 80x50 text mode\n");
@@ -342,15 +356,19 @@ int parse_resolution(const char* cmdline) {
             } else if (text_modes[i].width == 80 && text_modes[i].height == 25) {
                 // Already in 80x25, just ensure it
                 serial_write("VESA: Already in 80x25 mode\n");
+                terminal_set_dimensions(text_modes[i].width, text_modes[i].height);
+            } else if (text_modes[i].width == 132) {
+                // 132-column modes require VESA/SVGA
+                set_132_column_mode(text_modes[i].height);
             } else {
                 // For other modes, we can't easily set them without BIOS
                 // Just update software dimensions and warn
                 serial_write("VESA: Warning - Cannot set hardware mode for ");
                 serial_write(text_modes[i].name);
                 serial_write(", using software dimensions only\n");
+                terminal_set_dimensions(text_modes[i].width, text_modes[i].height);
             }
             
-            terminal_set_dimensions(text_modes[i].width, text_modes[i].height);
             return 1;
         }
     }
@@ -379,10 +397,38 @@ void init_vesa_with_mbi(const char* cmdline, struct multiboot_info* mbi) {
         serial_write("VESA: Multiboot framebuffer info available\n");
         
         // For text mode, framebuffer_type should be 2
-        if (mbi->framebuffer_type == 2) {
-            serial_write("VESA: Text mode detected from multiboot\n");
+        // For graphics mode used as text, framebuffer_type is 1
+        if (mbi->framebuffer_type == 2 || mbi->framebuffer_type == 1) {
+            if (mbi->framebuffer_type == 2) {
+                serial_write("VESA: Text mode detected from multiboot\n");
+            } else {
+                serial_write("VESA: Graphics mode detected from multiboot\n");
+            }
+            
             size_t width = mbi->framebuffer_width;
             size_t height = mbi->framebuffer_height;
+            
+            // For graphics modes, calculate text dimensions
+            // Assume 8-pixel wide characters and determine height from pixels
+            if (mbi->framebuffer_type == 1) {
+                serial_write("VESA: Calculating text dimensions from graphics mode\n");
+                width = width / 8;  // 8 pixels per character
+                
+                // Determine character height based on mode
+                if (height == 400) {
+                    height = height / 8;   // 8 pixels per char = 50 lines
+                } else if (height == 480) {
+                    height = height / 16;  // 16 pixels per char = 30 lines
+                } else if (height == 600) {
+                    height = height / 16;  // 16 pixels per char = 37 lines
+                } else if (height == 688) {
+                    height = height / 16;  // 16 pixels per char = 43 lines
+                } else if (height == 800) {
+                    height = height / 16;  // 16 pixels per char = 50 lines
+                } else {
+                    height = height / 16;  // Default: 16 pixels per char
+                }
+            }
             
             // Validate dimensions
             if (width >= 40 && width <= 200 && height >= 20 && height <= 100) {
