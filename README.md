@@ -5,9 +5,10 @@ A minimal x86-based operating system kernel with basic Hyper-V hypervisor integr
 ## Features
 
 - **Multiboot compliance**: Compatible with GRUB2 bootloader
+- **BIOS and UEFI support**: Hybrid ISO boots on legacy and modern systems
 - **Memory management**: Basic paging and heap allocation
 - **Hardware abstraction**: GDT/IDT setup and interrupt handling
-- **Hyper-V integration**: Detection and basic integration services
+- **Hyper-V integration**: Detection and basic integration services (Gen 1 & 2 VMs)
 - **Multiple display modes**: Text resolutions from 80x25 to 132x50
 - **VGA text mode**: Auto-detecting terminal output with scrolling
 - **Serial port**: COM1 debugging support
@@ -19,10 +20,11 @@ A minimal x86-based operating system kernel with basic Hyper-V hypervisor integr
 ## Architecture
 
 ### Boot Process
-1. GRUB2 loads the kernel using multiboot protocol
-2. Assembly bootstrap (`boot/multiboot.asm`) sets up initial environment
-3. Kernel main function initializes core systems
-4. Hyper-V detection and integration services activation
+1. BIOS/UEFI loads GRUB2 bootloader
+2. GRUB2 loads the kernel using multiboot protocol
+3. Assembly bootstrap (`boot/multiboot.asm`) sets up initial environment
+4. Kernel main function initializes core systems
+5. Hyper-V detection and integration services activation
 
 ### Core Components
 
@@ -141,16 +143,20 @@ make qemu-hyperv
 
 ### Running on Hyper-V
 
-**IMPORTANT**: HueOS requires a **Generation 1 Virtual Machine** in Hyper-V.
+HueOS supports both **Generation 1 (BIOS)** and **Generation 2 (UEFI)** Virtual Machines:
 
+**Generation 1 VM (BIOS boot):**
 1. Create a new Generation 1 VM in Hyper-V Manager
+2. Attach `hueos.iso` to the DVD drive
+3. Boot the VM
+
+**Generation 2 VM (UEFI boot):**
+1. Create a new Generation 2 VM in Hyper-V Manager
 2. Disable Secure Boot (in VM Settings → Security)
 3. Attach `hueos.iso` to the DVD drive
 4. Boot the VM
 
-**Why Generation 1?** The current bootloader uses BIOS/Multiboot, which is only supported by Generation 1 VMs. Generation 2 VMs require UEFI boot (future enhancement).
-
-See [docs/HYPERV_BOOT.md](docs/HYPERV_BOOT.md) for detailed instructions and troubleshooting.
+See [UEFI_SUPPORT.md](UEFI_SUPPORT.md) and [docs/HYPERV_BOOT.md](docs/HYPERV_BOOT.md) for detailed instructions.
 
 ### Running on QEMU
 

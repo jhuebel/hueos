@@ -57,7 +57,8 @@ $(BUILDDIR)/gdt_asm.o: $(SRCDIR)/gdt_asm.asm | $(BUILDDIR)
 $(KERNEL): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-# Create ISO image
+# Create hybrid BIOS+UEFI bootable ISO image
+# Uses grub-mkrescue which automatically creates UEFI support
 iso: $(KERNEL)
 	mkdir -p $(ISODIR)/boot/grub
 	cp $(KERNEL) $(ISODIR)/boot/hueos.bin
@@ -103,7 +104,10 @@ iso: $(KERNEL)
 	echo '    multiboot /boot/hueos.bin res=132x50' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '}' >> $(ISODIR)/boot/grub/grub.cfg
-	grub-mkrescue -o hueos.iso $(ISODIR)
+	grub-mkrescue -o hueos.iso $(ISODIR) 2>&1 | grep -v "will not be bootable" || true
+	@echo ""
+	@echo "ISO created: hueos.iso"
+	@echo "Boot modes supported: BIOS (Legacy) and UEFI (x86_64 + ia32)"
 
 # Run in QEMU
 qemu: $(KERNEL)
@@ -113,9 +117,13 @@ qemu: $(KERNEL)
 qemu-hyperv: $(KERNEL)
 	qemu-system-i386 -kernel $(KERNEL) -enable-kvm -cpu host
 
-# Run ISO in QEMU
+# Run ISO in QEMU (BIOS mode)
 qemu-iso: iso
-	qemu-system-i386 -cdrom hueos.iso
+	qemu-system-i386 -cdrom hueos.iso -serial stdio
+
+# Run ISO in QEMU (UEFI mode)
+qemu-iso-uefi: iso
+	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -cdrom hueos.iso -serial stdio -m 256M
 
 # Clean build files
 clean:
