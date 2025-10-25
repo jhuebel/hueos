@@ -26,6 +26,9 @@ Thumbs.db
 # ISO directory
 isodir/
 
+# Distribution artifacts
+dist/
+
 # Debug files
 *.gdb_history
 

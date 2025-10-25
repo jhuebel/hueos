@@ -31,6 +31,7 @@ OBJECTS = $(C_OBJECTS) $(KERNEL_ASM_OBJECTS) $(BOOT_ASM_OBJECTS)
 # Target kernel
 KERNEL = $(BUILDDIR)/hueos.bin
 ISO = $(BUILDDIR)/hueos.iso
+DISTDIR = dist
 
 # Default target
 all: $(KERNEL)
@@ -125,6 +126,15 @@ qemu-iso: iso
 # Run ISO in QEMU (UEFI mode)
 qemu-iso-uefi: iso
 	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -cdrom $(ISO) -serial stdio -m 256M
+
+# Create a distributable package (no .o files kept)
+# Copies the ISO and kernel into $(DISTDIR) and then cleans build artifacts
+package: iso
+	mkdir -p $(DISTDIR)
+	cp $(ISO) $(DISTDIR)/
+	cp $(KERNEL) $(DISTDIR)/
+	@echo "Package created in $(DISTDIR)"
+	$(MAKE) clean
 
 # Clean build files
 clean:
