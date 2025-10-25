@@ -30,6 +30,7 @@ OBJECTS = $(C_OBJECTS) $(KERNEL_ASM_OBJECTS) $(BOOT_ASM_OBJECTS)
 
 # Target kernel
 KERNEL = $(BUILDDIR)/hueos.bin
+ISO = $(BUILDDIR)/hueos.iso
 
 # Default target
 all: $(KERNEL)
@@ -104,9 +105,9 @@ iso: $(KERNEL)
 	echo '    multiboot /boot/hueos.bin res=132x50' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '    boot' >> $(ISODIR)/boot/grub/grub.cfg
 	echo '}' >> $(ISODIR)/boot/grub/grub.cfg
-	grub-mkrescue -o hueos.iso $(ISODIR) 2>&1 | grep -v "will not be bootable" || true
+	grub-mkrescue -o $(ISO) $(ISODIR) 2>&1 | grep -v "will not be bootable" || true
 	@echo ""
-	@echo "ISO created: hueos.iso"
+	@echo "ISO created: $(ISO)"
 	@echo "Boot modes supported: BIOS (Legacy) and UEFI (x86_64 + ia32)"
 
 # Run in QEMU
@@ -119,15 +120,15 @@ qemu-hyperv: $(KERNEL)
 
 # Run ISO in QEMU (BIOS mode)
 qemu-iso: iso
-	qemu-system-i386 -cdrom hueos.iso -serial stdio
+	qemu-system-i386 -cdrom $(ISO) -serial stdio
 
 # Run ISO in QEMU (UEFI mode)
 qemu-iso-uefi: iso
-	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -cdrom hueos.iso -serial stdio -m 256M
+	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -cdrom $(ISO) -serial stdio -m 256M
 
 # Clean build files
 clean:
-	rm -rf $(BUILDDIR) $(ISODIR) hueos.iso
+	rm -rf $(BUILDDIR) $(ISODIR)
 
 # Debug with GDB
 debug: $(KERNEL)
