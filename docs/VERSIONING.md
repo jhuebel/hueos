@@ -2,19 +2,29 @@
 
 HueOS follows [Semantic Versioning](https://semver.org/) (SemVer) for version numbering.
 
+## Current Status
+
+**HueOS is currently in ALPHA stage** - This means the OS is under active development with core features being implemented and tested. Breaking changes may occur between releases.
+
 ## Version Format
 
 ```
-MAJOR.MINOR.PATCH
+0.MINOR.PATCH-alpha
 ```
 
-- **MAJOR** version: Incompatible changes, major architectural changes, or significant feature sets
-- **MINOR** version: New features, backward-compatible functionality additions
-- **PATCH** version: Bug fixes, documentation updates, minor improvements
+During the alpha phase:
+- **MAJOR** version is `0` (indicating pre-1.0 alpha software)
+- **MINOR** version: Significant feature additions or milestones
+- **PATCH** version: Bug fixes, minor improvements, documentation updates
+- **-alpha** suffix: Indicates alpha/experimental status
+
+Once the OS reaches a stable feature set and API, it will move to:
+- **v0.x.x-beta** for beta testing
+- **v1.0.0** for the first stable release
 
 ## Version History
 
-### v2.2.0 (Current - October 2025)
+### v0.3.0-alpha (Current - October 2025)
 **Project Organization & Build System Improvements**
 - Clean project structure with organized documentation
 - ISO build output moved to `build/` directory
@@ -22,8 +32,9 @@ MAJOR.MINOR.PATCH
 - Comprehensive Hyper-V documentation (Gen 1 & Gen 2)
 - Historical documentation archived
 - Professional OSS project layout
+- Versioning scheme established
 
-### v2.1.0 (October 2025)
+### v0.2.0-alpha (October 2025)
 **SCSI Storage Support**
 - SCSI storage driver implementation
 - LSI Logic 53C895A controller support
@@ -31,14 +42,14 @@ MAJOR.MINOR.PATCH
 - PCI bus scanning for SCSI controllers
 - Hyper-V Generation 2 VM compatibility
 
-### v2.0.0 (October 2025)
+### v0.1.0-alpha (October 2025)
 **UEFI Boot Support**
 - UEFI boot support via GRUB2
 - Hybrid BIOS + UEFI bootable ISO
 - Support for both x86_64-efi and i386-efi platforms
 
-### Earlier Versions
-Prior to v2.0.0, the project focused on:
+### Earlier Development
+Prior to v0.1.0-alpha, the project focused on:
 - Video mode support (80x25, 80x50, 132x25, 132x50)
 - Framebuffer text rendering
 - VGA and VESA graphics support
@@ -46,35 +57,37 @@ Prior to v2.0.0, the project focused on:
 
 ## Release Process
 
-### Creating a New Release
+### Creating a New Alpha Release
 
 1. **Update VERSION file**
    ```bash
-   echo "X.Y.Z" > VERSION
+   echo "0.X.Y-alpha" > VERSION
    ```
 
 2. **Update documentation**
    - Update this file with release notes
    - Update `README.md` if needed
-   - Document breaking changes (for MAJOR releases)
+   - Document any breaking changes
 
 3. **Commit version bump**
    ```bash
    git add VERSION docs/VERSIONING.md
-   git commit -m "Bump version to vX.Y.Z"
+   git commit -m "Bump version to v0.X.Y-alpha"
    ```
 
 4. **Create and push tag**
    ```bash
-   git tag -a vX.Y.Z -m "Release vX.Y.Z - Brief Description
+   git tag -a v0.X.Y-alpha -m "Release v0.X.Y-alpha - Brief Description
 
    Major Features:
    - Feature 1
    - Feature 2
-   - Feature 3"
+   - Feature 3
+   
+   Note: This is an alpha release for testing and development."
    
    git push origin main
-   git push origin vX.Y.Z
+   git push origin v0.X.Y-alpha
    ```
 
 5. **Create distribution package**
@@ -90,29 +103,41 @@ Prior to v2.0.0, the project focused on:
    - Add release notes
    - Attach `dist/hueos.iso` and `dist/hueos.bin`
 
-## Version Increment Guidelines
+## Version Increment Guidelines (Alpha Stage)
 
-### MAJOR Version (X.0.0)
-Increment when you make:
-- Incompatible boot process changes
-- Major kernel API changes
-- Significant architectural redesigns
-- Removal of deprecated features
-
-### MINOR Version (x.Y.0)
+### MINOR Version (0.X.0-alpha)
 Increment when you add:
 - New hardware support (new drivers)
 - New boot modes or platforms
-- New command-line features
-- Backward-compatible kernel extensions
+- Significant feature milestones
+- Major subsystem implementations
 
-### PATCH Version (x.y.Z)
+### PATCH Version (0.x.Y-alpha)
 Increment when you make:
 - Bug fixes
 - Documentation updates
 - Performance improvements
 - Code refactoring (no feature changes)
-- Build system improvements (if minor)
+- Minor build system improvements
+
+### Moving Beyond Alpha
+
+**Beta Stage (0.x.x-beta):**
+- Core functionality is stable
+- API is mostly finalized
+- Focus shifts to bug fixes and polish
+- Breaking changes are rare
+
+**Stable Release (1.0.0):**
+- All core features implemented
+- API is stable and documented
+- Comprehensive testing completed
+- Ready for production use
+
+After v1.0.0, follow standard SemVer:
+- **MAJOR (X.0.0)**: Breaking changes, major architectural changes
+- **MINOR (x.Y.0)**: New features, backward-compatible
+- **PATCH (x.y.Z)**: Bug fixes, minor improvements
 
 ## Viewing Version Information
 
@@ -134,19 +159,34 @@ git show vX.Y.Z
 ### View version in releases
 GitHub Releases page: https://github.com/jhuebel/hueos/releases
 
-## Pre-release Versions
+## Pre-release Identifiers
 
-For development or testing releases, append a pre-release identifier:
-
+### Alpha Releases (Current)
 ```
-X.Y.Z-alpha.N    # Alpha releases
-X.Y.Z-beta.N     # Beta releases
-X.Y.Z-rc.N       # Release candidates
+0.X.Y-alpha    # Main alpha releases
 ```
 
-Example:
-```bash
-git tag -a v2.3.0-beta.1 -m "Release v2.3.0-beta.1 - Testing new filesystem support"
+HueOS is currently in alpha. All releases use the `-alpha` suffix to indicate:
+- Active development
+- Experimental features
+- Possible breaking changes
+- Testing and feedback phase
+
+### Future Pre-release Formats
+
+**Beta releases** (when ready):
+```
+0.X.Y-beta.N    # Beta releases with iteration number
+```
+
+**Release candidates** (before 1.0.0):
+```
+1.0.0-rc.N      # Release candidates before stable
+```
+
+Example progression:
+```
+0.3.0-alpha → 0.4.0-alpha → 0.5.0-beta.1 → 0.5.0-beta.2 → 1.0.0-rc.1 → 1.0.0
 ```
 
 ## Notes
