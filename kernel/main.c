@@ -109,6 +109,11 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     init_ide();
     ide_detect_devices();
     
+    // Initialize SCSI controller
+    serial_write("Initializing SCSI...\n");
+    init_scsi();
+    scsi_scan_devices();
+    
     // Print system information
     terminal_writestring("\nSystem Information:\n");
     terminal_writestring("==================\n");
@@ -131,6 +136,9 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     
     // Display IDE devices
     ide_print_devices();
+    
+    // Display SCSI devices
+    scsi_print_devices();
     
     // If verbose mode, show detailed hardware info
     if (kernel_verbose_mode) {

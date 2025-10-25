@@ -86,6 +86,9 @@ void serial_write(const char* data);
 void serial_writechar(char c);
 void ide_detect_devices(void);
 void ide_print_devices(void);
+void init_scsi(void);
+void scsi_scan_devices(void);
+void scsi_print_devices(void);
 void print_detailed_hardware_info(void);
 void print_memory_map(struct multiboot_info* mbi);
 

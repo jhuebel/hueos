@@ -46,3 +46,18 @@ void serial_write(const char* data) {
         serial_writechar(*data++);
     }
 }
+
+void serial_write_hex(uint32_t value) {
+    if (!serial_initialized) return;
+    
+    const char hex_chars[] = "0123456789ABCDEF";
+    char buffer[9];
+    buffer[8] = '\0';
+    
+    for (int i = 7; i >= 0; i--) {
+        buffer[i] = hex_chars[value & 0xF];
+        value >>= 4;
+    }
+    
+    serial_write(buffer);
+}

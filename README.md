@@ -13,6 +13,7 @@ A minimal x86-based operating system kernel with basic Hyper-V hypervisor integr
 - **VGA text mode**: Auto-detecting terminal output with scrolling
 - **Serial port**: COM1 debugging support
 - **IDE/ATAPI driver**: Support for hard disks and optical drives
+- **SCSI driver**: Support for SCSI storage controllers (LSI Logic, BusLogic)
 - **Hardware detection**: CPU info, PCI scanning, memory mapping
 - **Verbose boot mode**: Detailed hardware information display
 - **Cross-platform build**: Makefile-based build system
@@ -35,6 +36,7 @@ A minimal x86-based operating system kernel with basic Hyper-V hypervisor integr
 - **Terminal**: VGA text mode output with scrolling
 - **Serial port**: COM1 serial debugging interface
 - **IDE driver**: ATA/ATAPI device support with PIO mode
+- **SCSI driver**: SCSI controller and device detection
 - **Hardware detection**: CPUID, PCI scanning, device enumeration
 
 ## Building
@@ -217,9 +219,11 @@ Complete documentation is available in the [`docs/`](docs/) folder:
 - **[docs/HYPERV_BOOT.md](docs/HYPERV_BOOT.md)** - Complete Hyper-V configuration guide
 - **[docs/DISPLAY_MODES.md](docs/DISPLAY_MODES.md)** - Display resolution options and configuration
 - **[docs/IDE_AND_HARDWARE.md](docs/IDE_AND_HARDWARE.md)** - IDE driver and hardware detection docs
+- **[docs/SCSI_SUPPORT.md](docs/SCSI_SUPPORT.md)** - SCSI storage controller support
 - **[docs/TESTING.md](docs/TESTING.md)** - Testing guide and expected behavior
 - **[docs/BOOT_ISSUE_RESOLUTION.md](docs/BOOT_ISSUE_RESOLUTION.md)** - Boot troubleshooting
 - **[docs/UPDATE_SUMMARY.md](docs/UPDATE_SUMMARY.md)** - Latest features and updates
+- **[docs/UEFI_SUPPORT.md](docs/UEFI_SUPPORT.md)** - UEFI boot support documentation
 
 ## Contributing
 

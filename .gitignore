@@ -27,4 +27,4 @@ Thumbs.db
 isodir/
 
 # Debug files
-*.gdb_history
+*.gdb_historytest_scsi.img
