@@ -136,6 +136,14 @@ package: iso
 	@echo "Package created in $(DISTDIR)"
 	$(MAKE) clean
 
+# Create a distributable package while preserving build artifacts
+# Copies the ISO and kernel into $(DISTDIR) but keeps .o files for incremental builds
+preserve: iso
+	mkdir -p $(DISTDIR)
+	cp $(ISO) $(DISTDIR)/
+	cp $(KERNEL) $(DISTDIR)/
+	@echo "Package created in $(DISTDIR) (build artifacts preserved)"
+
 # Clean build files
 clean:
 	rm -rf $(BUILDDIR) $(ISODIR)
